@@ -23,4 +23,4 @@ If you encounter any errors or complication let me know😁
 
 ## Some examples of the widgets i made
 
-![Preview 1](Widget/TimeWord/PreviewPolite.png)
+![Preview 1](Widget/TimeWord/Previews/PreviewPolite.png)
