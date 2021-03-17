@@ -1,6 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// icon-color: teal; icon-glyph: clock;
 
 // set your preferences
 
@@ -9,6 +6,7 @@ var language = "automatique"
 //Change to what you want
 const backgroundColor = "#333444" 
 const textColor = "#ccc666"
+const gradientBackround = true
 
 
 // Various variables used throughout the code
@@ -22,15 +20,19 @@ var today = new Date()
 var hours = ['ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN','ELEVEN','TWELVE'];
 var quarters = ["OCLOCK","FIFTEEN","THIRTY","FORTY"]
 
+// define the widget entity
+let widget = createWidget()
 
 
-
-// Only runs if it is in the context of a widget
 if (config.runsInWidget) {
-  const widget = createWidget()
+  // The script runs inside a widget, so we pass our instance of ListWidget to be shown inside the widget on the Home Screen.
   Script.setWidget(widget)
-  Script.complete()
+}else{	
+	// The script runs inside the app, so we preview the widget.
+  widget.presentLarge()
 }
+
+
 //Widget update time
 function pad(n, width, z) {
   z = z || '0';
@@ -40,10 +42,20 @@ function pad(n, width, z) {
 
 // Function to create the widget
 function createWidget() {
-  // Create a new `ListWidget
+	
+	  // Create a new ListWidget
   const w = new ListWidget()
+		
+  if(gradientBackround){
+// 	for a linear gradient backround
+let gradient = new LinearGradient()
+gradient.colors = [new Color(backgroundColor), new Color("#002200")]
+gradient.locations = [0.3,0.9]
+w.backgroundGradient = gradient
+
+}else{
   w.backgroundColor = new Color(backgroundColor)
-  
+  }
 
 if(language=="automatique" && today.getHours()<21 && today.getHours()>8){
 	language = "polite"
@@ -109,6 +121,7 @@ w.addSpacer()
 	
 }
 
+  w.presentMedium()
   return w
 }
 
