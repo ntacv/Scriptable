@@ -19,3 +19,8 @@ Some shortcuts and widgets made on Scriptable IOS
 7. click outside the box to go back to your home screen and see the result.  
 
 If you encounter any errors or complication let me know😁
+
+
+## Some examples of the widgets i made
+
+![Preview 1](Widget/TimeWord/PreviewPolite.png)
