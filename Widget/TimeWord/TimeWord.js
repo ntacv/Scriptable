@@ -1,17 +1,20 @@
+// License Nathan Choukroun
 
 // set your preferences
 
 // polite, trash or automatique (get angry at 10pm)
 var language = "automatique"
 //Change to what you want
-const backgroundColor = "#333444" 
+const backgroundColor = "#115423" 
 const textColor = "#ccc666"
 const gradientBackround = true
+const gradientColor = "#326e42"
 
 
 // Various variables used throughout the code
 const width = 120
 const height = 32
+const typoSize = 20
 const baseColor = "#242305"
 const fillColor = "#e7e247"
 const white = "#ffffff"
@@ -49,7 +52,7 @@ function createWidget() {
   if(gradientBackround){
 // 	for a linear gradient backround
 let gradient = new LinearGradient()
-gradient.colors = [new Color(backgroundColor), new Color("#002200")]
+gradient.colors = [new Color(backgroundColor), new Color(gradientColor)]
 gradient.locations = [0.3,0.9]
 w.backgroundGradient = gradient
 
@@ -69,7 +72,7 @@ if (language == "trash" ){
 
   var trashText = w.addText("It's already\n"+ writeDate(hours, today.getHours())+ "\nfucking\n" + quarters[quarter(today.getMinutes())]+"!!!")
 
-  trashText.font = Font.regularSystemFont(22)
+  trashText.font = Font.regularSystemFont(typoSize)
   trashText.textColor = new Color(textColor)
   trashText.centerAlignText()
 
@@ -83,7 +86,7 @@ update.textColor = new Color(white);
 update.centerAlignText();
 */
 
-w.addSpacer()
+w.addSpacer(6)
   // Grab a symbol in Apple's SF Symbol
   const playSymbol = SFSymbol.named("iphone.slash")
   
@@ -101,7 +104,7 @@ w.addSpacer()
 // 	second part for nicer text
 	  var trashText = w.addText("It is\n"+ writeDate(hours, today.getHours())+ "\nand\n" + quarters[quarter(today.getMinutes())])
 
-  trashText.font = Font.regularSystemFont(22)
+  trashText.font = Font.regularSystemFont(typoSyze)
   trashText.textColor = new Color(textColor)
   trashText.centerAlignText()
 
