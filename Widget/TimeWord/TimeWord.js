@@ -3,7 +3,7 @@
 // set your preferences
 
 // polite, trash or automatique (get angry at 10pm)
-var language = "automatique"
+var language = "polite"
 //Change to what you want
 const backgroundColor = "#115423" 
 const textColor = "#ccc666"
@@ -60,12 +60,13 @@ w.backgroundGradient = gradient
   w.backgroundColor = new Color(backgroundColor)
   }
 
-if(language=="automatique" && today.getHours()<21 && today.getHours()>8){
+if(language=="automatique"){
+	if( today.getHours()<21 && today.getHours()>8){
 	language = "polite"
 }else{
 	language = "trash"
 }
-  
+}
 // first part for trashy text
 if (language == "trash" ){
   
@@ -104,12 +105,12 @@ w.addSpacer(6)
 // 	second part for nicer text
 	  var trashText = w.addText("It is\n"+ writeDate(hours, today.getHours())+ "\nand\n" + quarters[quarter(today.getMinutes())])
 
-  trashText.font = Font.regularSystemFont(typoSyze)
+  trashText.font = Font.regularSystemFont(typoSize)
   trashText.textColor = new Color(textColor)
   trashText.centerAlignText()
 
 	
-	w.addSpacer()
+	w.addSpacer(6)
   // Grab a symbol in Apple's SF Symbol
   const playSymbol = SFSymbol.named("swift")
   
