@@ -14,16 +14,20 @@ const themeColor = "#46bd46"
 const date = new Date()
 
 
+//resetFile()
 
 // define the widget entity
 let widget = createWidget()
 
 
 if (config.runsInWidget) {
+	
   // The script runs inside a widget, so we pass our instance of ListWidget to be shown inside the widget on the Home Screen.
   Script.setWidget(widget)
 }else{	
 	// The script runs inside the app, so we preview the widget.
+
+
   widget.presentMedium()
 }
 
@@ -36,7 +40,17 @@ function createWidget() {
   const w = new ListWidget()
   w.backgroundColor = Color.white()
 	
+var textInput
 
+if(args.queryParameters["reminder"]!=null){
+
+ textInput = args.shortcutParameter["reminder"]
+console.log(textInput)
+
+}else{
+	textInput = "null"
+}
+console.log(textInput)
 
 // Fetch contact list from iCloud/Local drive
 let fm = FileManager.local();
@@ -70,15 +84,17 @@ for(i=0;i<6;i++){
 // fm.writeString(reminderFile, JSON.stringify(reminderData))
 
 
+// var hey = w.addText(reminderData["Tons"][1])
 
-for(i=0;i<7;i++){
+//for(i=0;i<7;i++){
 	
-    var hey = w.addText(reminderData["Tons"][i][0] + " : " + reminderData["Tons"][i][1])
-    hey.font = Font.regularSystemFont(16)
+    var hey = w.addText(textInput)
+    hey.font = Font.regularMonospacedSystemFont(16)
     hey.textColor = new Color(themeColor)
     hey.centerAlignText()
-	
-}
+
+
+
 
 /*
 	//drawSquare(w)
@@ -200,15 +216,7 @@ reminderData = JSON.parse(fm.readString(reminderFile));
 
 console.log(reminderData)
 
-var textReset = {"Tons":[
-["mon",0],
-["tue",0],
-["wed",0],
-["thu",0],
-["fri",0],
-["sat",0],
-["sun",0]
-]}
+var textReset = {"Tons":"001011"}
 
 fm.writeString(reminderFile, JSON.stringify(textReset))
 
