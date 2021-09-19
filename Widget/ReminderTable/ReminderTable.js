@@ -1,20 +1,157 @@
 // License Nathan Choukroun
 
 
-// Store the data by putting a one for eachtask done for the day. Outputting a table with each ones colored in the theme. 
-// Inspired by the github widgets
+// Store reminder data by putting a one for eachtask done for the day. Outputting a table with each ones colored in the color theme. 
+// Inspired by the github widgets. 
+
+// You can put the sortcut and the data file in a another phone to continue using it. 
 
 
+
+
+
+
+
+
+
+
+// reduce data, keep only the square
+
+
+
+// edit for me
+// save date of the day and add a value if !=
 
 
 // Editable variables
-
+if(Device.isUsingDarkAppearance()){
+  const backgroundColor ="#eeeeee"
+}else{
 const backgroundColor = "#111111"
+}
 const themeColor = "#46bd46"
+
+
+// not editable 
 const date = new Date()
+const dateSave = new String(date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear())
+
+const day = date.getDay()-1
 
 
-//resetFile()
+
+    // Find today's reminders that are part of the reminder list
+    // NOTE : all-day reminders have their time set to 00:00 of the same day, but aren't returned with incompleteDueToday...
+let queryStartTime = new Date()
+queryStartTime.setDate(queryStartTime.getDate() - 1)
+queryStartTime.setHours(23, 59, 59, 0)
+let queryEndTime = new Date()
+queryEndTime.setHours(23, 59, 59, 0)
+
+
+var cal = Calendar.defaultForReminders()
+
+// fetch reminders
+var reminderComplete = await Reminder.completedBetween(queryStartTime, queryEndTime)
+
+var numberReminderDone = 0
+
+for(var reminder of reminderComplete){
+	
+	if(reminder.calendar.title == "EveryDay"){
+		numberReminderDone++
+		//console.log(reminder.title)
+}
+}
+console.log("done : "+numberReminderDone)
+
+
+
+
+
+
+// Fetch reminder data from iCloud/Local drive
+let fm = FileManager.local();
+
+const iCloudUsed = fm.isFileStoredIniCloud(module.filename);
+
+fm = iCloudUsed ? FileManager.iCloud() : fm;
+
+const widgetFolder = "DoneTable";
+
+const offlinePath = fm.joinPath(fm.documentsDirectory(), widgetFolder);
+
+if (!fm.fileExists(offlinePath)){
+
+fm.createDirectory(offlinePath);
+}
+
+reminderFile = fm.joinPath(offlinePath,'DoneTable.json');
+
+reminderData = JSON.parse(fm.readString(reminderFile));
+
+
+
+
+
+
+// sync data one time a day
+if(reminderData["lastDay"] != String(dateSave)){
+
+
+reminderData["lastDay"] = String(dateSave)
+console.log(reminderData["lastDay"])
+
+var reminderValue = reminderData["data"]
+
+var months = reminderData["data"].length
+
+
+if(reminderValue[0].length ==4){
+//.unshift
+  reminderValue.unshift([0])
+}else{
+	if(reminderValue[0][0] != 0){
+	  reminderValue[0].unshift(0)
+    }else{
+	  //reminderValue[0][0] += 2*10^day    
+      reminderValue[0][0] = 1
+      console.log("write data for day")
+}
+}
+
+console.log(reminderData["data"][0][0])
+
+
+//reminderData["data"][reminderDataLength] = 3*10^(day)
+reminderData["data"][0][1] = 1
+
+
+fm.writeString(reminderFile, JSON.stringify(reminderData))
+
+/*
+for(var i=0;i<=reminderDataLength;i++){
+	console.log(reminderData["data"][reminderDataLength-1][i])
+	
+}*/
+
+
+
+
+}//if date
+
+
+
+
+
+// To reset the data file, 
+// uncomment the next line
+// run the code once 
+// comment the line again tu ruen the code safely
+//// 
+// resetFile()
+
+
 
 // define the widget entity
 let widget = createWidget()
@@ -28,10 +165,10 @@ if (config.runsInWidget) {
 	// The script runs inside the app, so we preview the widget.
 
 
-  widget.presentMedium()
+  //widget.presentSmall()
 }
 
-
+Script.complete()
 
 
 // Function to create the widget
@@ -45,12 +182,12 @@ var textInput
 if(args.queryParameters["reminder"]!=null){
 
  textInput = args.shortcutParameter["reminder"]
-console.log(textInput)
+//console.log(textInput)
 
 }else{
 	textInput = "null"
 }
-console.log(textInput)
+//console.log(textInput)
 
 // Fetch contact list from iCloud/Local drive
 let fm = FileManager.local();
@@ -73,38 +210,64 @@ reminderFile = fm.joinPath(offlinePath,'DoneTable.json');
 reminderData = JSON.parse(fm.readString(reminderFile));
 
 
-//contactList["Tons"][date.getDay()][1]++
-
-for(i=0;i<6;i++){
-	
-	console.log(reminderData["Tons"][i])
-}
-
 
 // fm.writeString(reminderFile, JSON.stringify(reminderData))
 
 
-// var hey = w.addText(reminderData["Tons"][1])
 
-//for(i=0;i<7;i++){
+
+
+
+
+  let line = w.addStack()
+  line.layoutVertically()
+  line.setPadding(0, 4, 0, 0)
+
+
+  for(var i=0;i<7;i++){
+
+  let column = line.addStack()
+
+  for(var j=0;j<6;j++){
 	
-    var hey = w.addText(textInput)
-    hey.font = Font.regularMonospacedSystemFont(16)
-    hey.textColor = new Color(themeColor)
-    hey.centerAlignText()
+//let squareItem = SFSymbol.named(i*j+".square.fill")
+let squareItem = SFSymbol.named("square.fill")
+squareList = column.addImage(squareItem.image)
 
+squareList.imageSize = new Size(18, 18)
 
-
-
-/*
-	//drawSquare(w)
-	let square = SFSymbol.named(i+".square.fill")
-	squareList = w.addImage(square.image)
+if(j<reminderData["data"].length){
 	
-	squareList.tintColor = new Color(themeColor)
-  squareList.imageSize = new Size(20, 18)
-*/
+	if(i<reminderData["data"][j].length){
+		
+		let inputValue = reminderData["data"][j][i]
+		
+		if(inputValue != 0){
+		
+			squareList.tintColor = new Color(themeColor)
+}	
+		else{
+			squareList.tintColor = Color.lightGray()
+}//input
+
+}//if i
+
+}//if j
+else{
 	
+	squareList.tintColor = Color.black()
+
+
+}//if j
+ column.addSpacer(4)
+}//for
+}//for
+
+
+
+
+
+
 	
 	return w
 }
@@ -211,12 +374,20 @@ fm.createDirectory(offlinePath);
 }
 
 reminderFile = fm.joinPath(offlinePath,'DoneTable.json');
+// 
+// fm.copy(reminderFile, fm.joinPath(offlinePath, "DoneTableCopy.json"))
 
 reminderData = JSON.parse(fm.readString(reminderFile));
 
 console.log(reminderData)
 
-var textReset = {"Tons":"001011"}
+var textReset = 
+{"name":"reminderData",
+"lastDay":" ",
+"data":[
+[0,0,0,0,0,0,0]
+]
+}
 
 fm.writeString(reminderFile, JSON.stringify(textReset))
 
